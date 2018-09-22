@@ -6,6 +6,7 @@
 - [简介](#introduction)
 - [提示与技巧](tips.md)
     - [OTA增量更新提示](tips.md#ota-installation-tips)
+- [翻译人员列表](translators.md)
 
 以下内容供开发者阅读
 
