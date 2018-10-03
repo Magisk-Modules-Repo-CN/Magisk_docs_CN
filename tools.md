@@ -1,5 +1,5 @@
-## Available Tools
-Magisk comes with a lot of tools for installation, programs running as a daemon, and utilities for developers. This documentation covers 3 binaries, and many more tools are available as applets. The relation between tools are shown below:
+## 可用工具
+Magisk附带了许多安装工具，包括用于保持程序运行的程序、开发人员的实用程序。 本文档包含3个二进制文件，还有许多工具可用作小程序（Applet）。工具之间的关系如下所示：
 
 ```
 magiskboot                 /* binary */
@@ -13,13 +13,13 @@ su -> magisk
 ```
 
 ### magiskboot
-A tool to unpack / repack boot images, parse and patch cpio and dtbs, hex patch binaries, compress / decompress with multiple algorithms. It is used to install Magisk into boot images.
+一个能够【解压缩或重新打包启动映像、解析和修补cpio和dtbs、十六进制转二进制，使用多种算法压缩/解压缩】的工具。它用于安装Magisk 到启动映像中。
 
-`magiskboot` natively supports (which means it does not call external tools) all popular compression methods including `gzip` (used everywhere for compressing kernel and ramdisk), `lz4` (used to compress kernel in modern devices like Pixel), `lz4_legacy` (legacy LZ4 block format with special metadata used [only on LG](https://events.static.linuxfound.org/sites/events/files/lcjpcojp13_klee.pdf) to compress kernel), `lzma` (LZMA1 algorithm natively supported in Linux kernel, used in some custom kernel to compress ramdisk), `xz` (LZMA2 algorithm, very high compression rate, used in Magisk for high compression mode and storing binaries), and `bzip2` (used in desktop Linux boot images to create bzImage, haven't seen on Android yet).
+`magiskboot` 原生支持（这意味着不必调用外部工具）所有流行的压缩方法，包括 `gzip` （用于压缩内核和ramdisk），lz4（用于压缩像Google Pixel 这样的先进设备中的内核），lz4_legacy（仅使用特殊元数据的传统LZ4块格式）【只用于LG】，lzma（Linux内核本身就支持的LZMA1算法，用于某些自定义内核压缩ramdisk），xz（LZMA2算法，拥有非常高的压缩率，在Magisk中用于高压缩模式和存储二进制文件），以及bzip2（用于桌面Linux启动映像创建bzImage，不过并未应用于Android）。
 
-The concept of `magiskboot` is to keep the images as intact as possible. For unpacking, it extracts the large chunks of data (kernel, ramdisk, second, dtb, extra etc.) and decompress them if possible. When repacking a boot image, the original boot image has to be provided so it can use the original headers (including MTK specific headers) with only changing the necessary entries such as the data chunk sizes, and re-compress all data with the original compression method. The same concept also applies to CPIO patching: it does not extract all files, modify in file system, archive all files back to cpio as usually done to create Linux `initramfs`, instead we do modifications directly in the cpio level in memory without involving any data extraction.
+magiskboot的意图是尽可能保持镜像完整。对于解包，它会提取大块数据（内核，ramdisk，secound，dtb等），并尽可能解压缩它们。重新打包启动镜像时，必须提供原始boot映像，以便它可以使用原始的headers（包括MTK特定headers），只需更改必要的数据（如数据块大小），并使用原始压缩率重新压缩所有数据。同样的概念也适用于CPIO修补：它不提取所有文件，在文件系统中修改，将所有文件存档回cpio，不像通常用于创建Linux一样来initramfs，而是直接在内存中的cpio级别进行修改，并不涉及任何数据的直接修改。
 
-Command help message:
+指令帮助信息:
 
 ```
 Usage: magiskboot <action> [args...]
