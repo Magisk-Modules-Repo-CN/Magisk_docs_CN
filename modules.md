@@ -1,49 +1,49 @@
-# Magisk Modules
-## Magisk Module Format
-A Magisk module is a folder placed in the root folder in `magisk.img`, which has a structure as described below:
+# Magisk 模块
+## Magisk 模块格式
+Magisk 模块存放在 `magisk.img`根目录下的文件夹，其框架如下所述：
 
 ```
-$MOUNTPOINT
+$MOUNTPOINT（挂载点）
 ├── .
 ├── .
-├── $MODID                  <--- The ID of the module, should match with module.prop
-│   ├── auto_mount          <--- If this file exists, auto mount is enabled
-│   ├── disable             <--- If this file exists, the module is disabled
-│   ├── module.prop         <--- This files stores the identity and properties of the module
-│   ├── post-fs-data.sh     <--- This script will be executed in post-fs-data
-│   ├── remove              <--- If this file exists, the module will be removed next reboot
-│   ├── service.sh          <--- This script will be executed in late_start service
-│   ├── system.prop         <--- This file will be loaded as system props
-│   ├── system              <--- If auto mount is enabled, Magisk will "Magic Mount" this folder
-│   │   ├── .
-│   │   ├── .
-│   │   └── .
-│   ├── vendor              <--- Auto generated. A symlink to $MODID/system/vendor
-│   ├── .                   <--- Any other files/folders are allowed
-│   └── .		
-├── another_module
-│   ├── .
-│   └── .
+├── $MODID                  <--- 模块的ID，应与 module.prop 相匹配
+│   ├── auto_mount          <--- 如果该文件存在，自动挂载可用
+│   ├── disable             <--- 如果该文件存在，自动挂载不可用
+│   ├── module.prop         <--- 该文件用于存放模块的标识和属性
+│   ├── post-fs-data.sh     <--- 该脚本会在 post-fs-data 中执行
+│   ├── remove              <--- 人如果该文件存在，模块会在下一次重启时被移除
+│   ├── service.sh          <--- 该脚本会在 late_start 服务中执行
+│   ├── system.prop         <--- 该文件会被视为系统核心脚本(system props)加载
+│   ├── system              <--- 如果自动挂载启用， Magisk 会 "Magic Mount" 该文件夹
+│   │   ├── .
+│   │   ├── .
+│   │   └── .
+│   ├── vendor              <--- 自动生成，一个链接到 $MODID/system/vendor 的符号链接 
+│   ├── .                   <--- 一些其他被允许的文件/文件夹
+│   └── .		
+├── another_module（其他模块）
+│   ├── .
+│   └── .
 ├── .
 ├── .
 ```
-You are not required to use my Magisk Module Template to create a module. As long as you place files with the structure above, it will be recognized as a module.
+你不需要使用我提供的 Magisk 模块模板去创建一个新模块。只要你按上述框架放置文件，就能够被 Magisk 识别为模块。
 
-## Magisk Module Template
-The **Magisk Module Template** is hosted **[here](https://github.com/topjohnwu/magisk-module-template)**.
+## Magisk 模块模板
+ **Magisk 模块模板** 点击**[这里](https://github.com/topjohnwu/magisk-module-template)**获取。
 
-It is a template to create a flashable zip to install Magisk Modules. It is designed to be simple to use so that anyone can create their own modules easily. The template itself contains minimal scripting for installation; most of the functions are located externally in [util_functions.sh](https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh), which will be installed along with Magisk, and can be upgraded through a Magisk upgrade without the need of a template update.
+它是一个以zip刷入安装的Magisk模块的模板。它旨在可被简单套用，以便任何人都可以轻松创建自己的模块。模板本身已包含最小安装脚本；大多数功能位于外部的 [util_functions.sh](https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh) 中，它将会与Magisk一起安装，并且无需使用模板就可以跟随Magisk一同升级。
 
-Here are some files you would want to know:
+以下是一些你或许希望了解的文件：
 
-- `config.sh`: A simple script used as a configuration file. It is the place to configure which features your module needs/disables. A detailed instructions on how to use the template is also written in this file.
-- `module.prop`: This file contains your module's indentity and properties, including name and versions etc.. This file will be used to identify your module on an actual device and in the [Magisk Modules Repo](https://github.com/Magisk-Modules-Repo)
-- `common/*`: Boot stage scripts and `system.prop`
-- `META-INF/com/google/android/update-binary`: The actual installation script. Modify this file for advanced custom behavior
+- `config.sh`：用作配置文件的简单脚本。在这里可以配置模块 需要/禁用 的特性。关于如何使用模板的详细说明也写在该文件中。
+- `module.prop`：该文件包含您的模块的识别ID和属性，包括名称和版本等等。该文件将用于在真实设备上和 [Magisk Modules Repo](https://github.com/Magisk-Modules-Repo) 中识别Magisk模块。
+- `common/*`：启动状态(Boot stage)脚本兼 `system.prop`
+- `META-INF/com/google/android/update-binary`：实际安装脚本。修改该脚本以启用高级自定义功能。
 
-And here are some notes to be aware of:
+以下是一些注意事项：
 
-- The template depends on external Magisk scripts, please specify the correct `minMagisk` value in `module.prop` with the template version your module is based on, or the minimum Magisk version your module is tested on.
-- **Windows users please check here!!** The line endings of all text files should be in the **Unix format**. Please use advanced text editors like Sublime, Atom, Notepad++ etc. to edit **ALL** text files, **NEVER** use Windows Notepad.
-- In `module.prop`, `version` can be an arbitrary string, so any fancy version name (e.g. `ultra-beta-v1.1.1.1`) is allowed. However, `versionCode` **MUST** be an integer. The value is used for version comparison.
-- Make sure your module ID **does not contain any spaces**.
+- 模板依赖于外部Magisk脚本，请按照你模块基于的模板版本在`module.prop`中设定正确的 `minMagisk` 值，或者测试模块所支持的Magisk最低版本。
+- **Windows用户请看这里！！**所有文本文件的行尾应以**Unix格式**书写。请使例如Sublime, Atom, Notepad++等高级文本编辑工具去编辑**所有**文档，**绝对不要**用Windows记事本。 
+- 在 `module.prop`中, `版本号（version）`可以是任意字符串，因此任何充满创意的版本号命名都被允许（如`ultra-beta-v1.1.1.1`）。但是， `版本内部编号（versionCode）` **必须** 必须为整数型数据。该值用于版本比较。
+- 请确保你的模块ID **不包含空格**。
